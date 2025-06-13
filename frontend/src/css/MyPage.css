@@ -1,0 +1,124 @@
+/* 전체 레이아웃: 고정된 비율 */
+.mypage-grid {
+  display: flex;
+  min-height: 100vh;
+  font-family: "Pretendard", sans-serif;
+  max-width: 1200px;
+  /* margin: 0 auto; */
+  width: 100%
+}
+
+/* 메인 콘텐츠 */
+.main-content {
+  margin-left: 220px;
+  padding: 2rem 3rem;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar-wrapper.collapsed + .main-content {
+  margin-left: 0;
+  min-height: calc(100vh - 60px);
+}
+
+/* 사진 + 정보 테이블 구역 */
+.info-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* 사진 */
+.photo-box {
+  width: 120px;
+  height: 160px;
+  background-color: #003366;
+  color: white;
+  border-radius: 10%;
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 학적 정보 테이블 */
+.info-table {
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.info-table th,
+.info-table td {
+  border: 1px solid #ccc;
+  padding: 0.6rem 1rem;
+}
+
+.info-table th {
+  background-color: #f9f9f9;
+  text-align: right;
+  width: 60px;
+  white-space: nowrap;
+}
+
+.info-table td {
+  text-align: left;
+  width: 300px;
+  background-color: #fdfdfd;
+}
+
+/* 버튼 정렬 */
+.info-buttons {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.info-buttons button {
+  padding: 0.5rem 1.2rem;
+  font-size: 0.9rem;
+  background-color: #004080;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.info-buttons button:hover {
+  background-color: #0059b3;
+}
+
+/* 시간표 필터 */
+.timetable-filter {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.timetable-filter label {
+  font-size: 0.95rem;
+}
+
+/* 시간표 테이블 */
+.course-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.course-table th,
+.course-table td {
+  border: 1px solid #ccc;
+  padding: 0.6rem;
+  text-align: center;
+}
+
+.course-table th {
+  background-color: #f0f0f0;
+}
+
+.summary {
+  margin-top: 1rem;
+  font-weight: bold;
+}

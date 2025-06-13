@@ -1,0 +1,49 @@
+/* src/css/TimetablePage.css */
+
+.timetable-grid {
+  display: flex;
+}
+
+.main-content {
+  margin-left: 220px;
+  padding: 2rem 3rem;
+  flex: 1;
+  background-color: #fff;
+}
+
+.timetable-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.timetable-table th,
+.timetable-table td {
+  border: 1px solid #ccc;
+  padding: 0.8rem;
+  min-width: 120px;
+  vertical-align: top;
+}
+
+.timetable-table th {
+  background-color: #f0f0f0;
+}
+
+.cell-course {
+  background-color: #e6f0ff;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  height: 100%;
+}
+
+.cell-course .name {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.cell-course .info {
+  font-size: 0.8rem;
+  color: #333;
+}
