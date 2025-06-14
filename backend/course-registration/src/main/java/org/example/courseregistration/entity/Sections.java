@@ -1,10 +1,7 @@
 package org.example.courseregistration.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(
@@ -54,3 +51,4 @@ public class Sections {
     @Column(name = "se_classroom", length = 30)
     private String classroom;
 }
+
