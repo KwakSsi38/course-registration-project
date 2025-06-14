@@ -3,7 +3,7 @@ package org.example.courseregistration.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.courseregistration.dto.TimeTableDto;
-import org.example.courseregistration.service.TimeTableService;
+import org.example.courseregistration.service.CourseTimeTableService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TimeTableController {
 
-    private final TimeTableService timeTableService;
+    private final CourseTimeTableService timeTableService;
 
     // ✅ 시간표 조회 API
     @GetMapping("/view")

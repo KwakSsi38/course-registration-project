@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.courseregistration.dto.DeleteRequestDto;
 import org.example.courseregistration.dto.EnrollRequestDto;
 import org.example.courseregistration.entity.Students;
-import org.example.courseregistration.repository.StudentsRepository;
+import org.example.courseregistration.repository.EnrollStudentsRepository;
 import org.example.courseregistration.service.EnrollService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class EnrollController {
 
     private final EnrollService enrollService;
-    private final StudentsRepository studentsRepository;
+    private final EnrollStudentsRepository studentsRepository;
 
     @PostMapping("/apply")
     public ResponseEntity<String> apply(@RequestBody EnrollRequestDto request) {
