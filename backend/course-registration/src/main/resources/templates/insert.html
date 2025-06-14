@@ -26,8 +26,7 @@
         <td th:text="${s.professorName}"></td>
         <td>
             <form th:action="@{/api/enroll}" method="post">
-                <input type="hidden" name="courseId" th:value="${s.courseId}" />
-                <input type="hidden" name="sectionNo" th:value="${s.section}" />
+                <input type="hidden" name="sectionId" th:value="${s.sectionId}" />
                 <button type="submit">신청</button>
             </form>
         </td>
