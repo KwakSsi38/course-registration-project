@@ -1,0 +1,36 @@
+<!-- templates/insert.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>수강신청 입력</title>
+</head>
+<body>
+<h2>수강신청 가능한 과목</h2>
+<table border="1">
+    <tr>
+        <th>과목코드</th>
+        <th>과목명</th>
+        <th>분반</th>
+        <th>학점</th>
+        <th>전공</th>
+        <th>교수명</th>
+        <th>신청</th>
+    </tr>
+    <tr th:each="s : ${sections}">
+        <td th:text="${s.courseId}"></td>
+        <td th:text="${s.courseName}"></td>
+        <td th:text="${s.section}"></td>
+        <td th:text="${s.unit}"></td>
+        <td th:text="${s.major}"></td>
+        <td th:text="${s.professorName}"></td>
+        <td>
+            <form th:action="@{/api/enroll}" method="post">
+                <input type="hidden" name="sectionId" th:value="${s.sectionId}" />
+                <button type="submit">신청</button>
+            </form>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
