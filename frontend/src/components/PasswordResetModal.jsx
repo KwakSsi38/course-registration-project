@@ -20,6 +20,12 @@ function PasswordResetModal({onClose}) {
       return;
     }
 
+    
+    if (newPassword.length < 5) {
+      setError("비밀번호는 5자리 이상이어야 합니다.");
+      return;
+    }
+
     try {
       // 1. 현재 비밀번호 검증 요청
       const verifyResponse = await axios.post(
