@@ -153,7 +153,7 @@ function TimetablePage() {
                       <td key={d}>
                         {c && (
                           <div className="cell-course">
-                            <div className="courseName">{c.courseName}</div>
+                            <div className="name">{c.courseName}</div>
                             <div className="info">
                               {c.courseIdNo}-{c.section}
                               <br />
