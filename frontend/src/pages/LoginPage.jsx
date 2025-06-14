@@ -6,14 +6,16 @@ import {useEffect} from "react";
 import {isLoggedIn} from "../utils/auth";
 import "../css/LoginPage.css";
 import "../css/Error.css";
+import {useNavigate} from "react-router-dom";
 
 function LoginPage() {
   const [studentId, setStudentId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect(() => {        
+  useEffect(() => {
     if (isLoggedIn()) {
       window.location.href = "/mypage";
     }
@@ -26,15 +28,18 @@ function LoginPage() {
 
     try {
       // 요청 보내기 - 우선 더미 처리
-      // const response = await axios.post("/api/users/login", {
-      //   studentId,
-      //   password,
-      // });
-      const response = {
-        data: {
-          token: "dummy-token-1234",
+      const response = await axios.post(
+        "http://localhost:8080/api/users/login",
+        {
+          studentId,
+          password,
         },
-      };
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const {token} = response.data;
 
@@ -42,10 +47,12 @@ function LoginPage() {
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`; // 전역 Authorization 설정
 
-      window.location.href = "/mypage";
+      navigate("/mypage");
     } catch (err) {
-      if (err.response?.status === 400) {
-        setError("학번 또는 비밀번호가 올바르지 않습니다.");
+      if (err.response?.status === 401) {
+        setError("학번 또는 비밀번호가 일치하지 않습니다.");
+      } else if (err.response?.status === 404) {
+        setError("페이지를 찾을 수 없습니다.");
       } else {
         setError("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
       }
