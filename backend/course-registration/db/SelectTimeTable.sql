@@ -10,8 +10,8 @@ CREATE OR REPLACE PROCEDURE SelectTimeTable (
     IS
     CURSOR timetable_cur IS
         SELECT se.se_time AS 교시, -- 수업 시간 (예: 월1,화2 등 콤마구분)
-               c.c_id AS 과목번호, -- 과목코드
-               c.c_name AS 과목명, -- 과목명
+               c.C_ID_NO AS 과목번호, -- 과목코드
+               c.C_ID AS 과목명, -- 과목명
                se.se_section AS 분반, -- 분반번호
                c.c_unit AS 학점, -- 학점
                se.se_classroom AS 장소 --강의실위치

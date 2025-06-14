@@ -2,8 +2,8 @@ CREATE OR REPLACE VIEW V_StudentTimetable AS
 SELECT
     e.s_id AS student_id,
     se.se_time AS time,
-    c.c_id AS course_id,
-    c.c_name AS course_name,
+    c.C_ID_NO AS course_id,
+    c.C_ID AS course_name,
     se.se_section AS section,
     c.c_unit AS credit,
     se.se_classroom AS classroom
