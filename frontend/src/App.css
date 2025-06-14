@@ -42,3 +42,8 @@ html, body {
     transform: rotate(360deg);
   }
 }
+
+select {
+  margin-left: 5px;
+  margin-right: 5px;
+}

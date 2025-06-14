@@ -1,5 +1,10 @@
 /* Header */
 .global-header {
+  position: fixed;       /* 상단에 고정 */
+  top: 0;                /* 화면 최상단 */
+  left: 0;
+  right: 0;
+  z-index: 1000;         /* 다른 요소 위에 표시되도록 */
   display: flex;
   justify-content: space-between; /* 로고와 버튼을 좌우 끝으로 */
   align-items: center;
