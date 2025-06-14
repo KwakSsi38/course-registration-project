@@ -90,8 +90,6 @@ function TimetablePage() {
         const day = matches[1];
         const period = parseInt(matches[2], 10);
 
-        // ⭐ 충돌 처리는 서버에서 한다고 가정하고 클라이언트에서는 단순히 매핑
-        // timetable[day]와 timetable[day][period]가 존재하는지 확인하여 안전하게 접근
         if (timetable[day] && periods.includes(period)) {
           timetable[day][period] = course;
         } else {
@@ -135,44 +133,46 @@ function TimetablePage() {
           <button onClick={handleSearch}>검색</button>
         </div>
 
-        <table className="timetable-table">
-          <thead>
-            <tr>
-              <th>교시</th>
-              {days.map((day) => (
-                <th key={day}>{day}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {periods.map((p) => (
-              <tr key={p}>
-                <td>{p}교시</td>
-                {days.map((d) => {
-                  const c = timetable[d][p];
-                  return (
-                    <td key={d}>
-                      {c && (
-                        <div className="cell-course">
-                          <div className="courseName">{c.courseName}</div>
-                          <div className="info">
-                            {c.courseIdNo}-{c.section}
-                            <br />
-                            {c.professorName}
-                            <br />
-                            {c.classroom}
-                            <br />
-                            {c.time}
-                          </div>
-                        </div>
-                      )}
-                    </td>
-                  );
-                })}
+        <div className="timetable-wrapper">
+          <table className="timetable-table">
+            <thead>
+              <tr>
+                <th>교시</th>
+                {days.map((day) => (
+                  <th key={day}>{day}</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {periods.map((p) => (
+                <tr key={p}>
+                  <td>{p}교시</td>
+                  {days.map((d) => {
+                    const c = timetable[d][p];
+                    return (
+                      <td key={d}>
+                        {c && (
+                          <div className="cell-course">
+                            <div className="courseName">{c.courseName}</div>
+                            <div className="info">
+                              {c.courseIdNo}-{c.section}
+                              <br />
+                              {c.professorName}
+                              <br />
+                              {c.classroom}
+                              <br />
+                              {c.time}
+                            </div>
+                          </div>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </main>
     </div>
   );
