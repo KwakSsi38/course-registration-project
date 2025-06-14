@@ -3,11 +3,11 @@
   display: flex;
   justify-content: space-between; /* 로고와 버튼을 좌우 끝으로 */
   align-items: center;
-  padding: 10px 20px;
   background-color: #003366;
   color: white;
-  padding: 1rem 2rem;
+  padding: 0 2rem;
   font-size: 1.2rem;
+  height:60px;
 }
 
 .logo-link {

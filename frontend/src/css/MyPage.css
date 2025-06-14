@@ -4,12 +4,13 @@
   min-height: 100vh;
   font-family: "Pretendard", sans-serif;
   max-width: 1200px;
-  /* margin: 0 auto; */
+  margin: 0;
   width: 100%
 }
 
 /* 메인 콘텐츠 */
 .main-content {
+  margin: 0;
   margin-left: 220px;
   padding: 2rem 3rem;
   transition: margin-left 0.3s ease;
