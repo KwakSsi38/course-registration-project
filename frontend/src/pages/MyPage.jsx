@@ -210,7 +210,7 @@ function MyPage() {
                     <td>{course.score || "-"}</td>
                     <td>{course.professorName}</td>
                     <td>{course.time}</td>
-                    <td>{course.time}</td>
+                    <td>{course.classroom}</td>
                   </tr>
                 ))
               ) : (
