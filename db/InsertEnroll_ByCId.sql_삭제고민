@@ -1,0 +1,30 @@
+CREATE OR REPLACE PROCEDURE InsertEnroll_ByCId (
+    s_id IN VARCHAR2,
+    c_id IN VARCHAR2,
+    c_id_no IN NUMBER,
+    se_section IN NUMBER,  -- ✅ 분반 추가
+    result OUT VARCHAR2
+)
+    IS
+    sectionId sections.id%TYPE;
+BEGIN
+    -- c_id, c_id_no, 분반 모두 일치하는 섹션 조회
+    SELECT id
+    INTO sectionId
+    FROM sections
+    WHERE c_id = c_id
+      AND c_id_no = c_id_no
+      AND se_section = se_section;
+
+    -- 실제 수강신청 처리
+    InsertEnroll(s_id, sectionId, result);
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        result := '해당 과목의 섹션이 존재하지 않습니다';
+    WHEN TOO_MANY_ROWS THEN
+        result := '동일한 과목+분반으로 섹션이 여러 개 존재합니다 (비정상)';
+    WHEN OTHERS THEN
+        result := '기타 오류 발생: ' || SQLERRM;
+END;
+/
