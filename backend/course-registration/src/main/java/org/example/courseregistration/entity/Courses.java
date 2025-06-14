@@ -21,5 +21,9 @@ public class Courses {
 
     @Column(name = "c_major", length = 30, nullable = false)
     private String major;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "p_id")  // 교수 ID 컬럼 매핑
+    private Professors professor;
 }
 
