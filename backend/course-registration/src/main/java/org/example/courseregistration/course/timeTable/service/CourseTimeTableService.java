@@ -15,17 +15,15 @@ public class CourseTimeTableService {
 
   private final DataSource dataSource;
 
-  public List<TimeTableDto> getTimeTable(String studentId, int year, int semester) {
+  public List<TimeTableDto> getTimeTable(String studentId) {
     List<TimeTableDto> timeTable = new ArrayList<>();
 
-    String sql = "{CALL SelectTimeTable(?, ?, ?)}";
+    String sql = "{CALL SelectTimeTable(?)}";
 
     try (Connection conn = dataSource.getConnection();
         CallableStatement stmt = conn.prepareCall(sql)) {
 
       stmt.setString(1, studentId);
-      stmt.setInt(2, year);
-      stmt.setInt(3, semester);
 
       boolean hasResult = stmt.execute();
 
@@ -33,12 +31,14 @@ public class CourseTimeTableService {
         try (ResultSet rs = stmt.getResultSet()) {
           while (rs.next()) {
             timeTable.add(new TimeTableDto(
-                rs.getString("과목번호"),
-                rs.getString("과목명"),
-                rs.getString("분반"),
-                rs.getInt("학점"),
-                rs.getString("장소"),
-                rs.getString("교시")));
+                rs.getString("courseIdNo"),
+                rs.getString("courseName"),
+                rs.getString("section"),
+                rs.getInt("credit"),
+                rs.getString("major"),
+                rs.getString("professorName"),
+                rs.getString("time"),
+                rs.getString("classroom")));
           }
         }
       }
