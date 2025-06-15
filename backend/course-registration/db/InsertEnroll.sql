@@ -60,8 +60,6 @@ BEGIN
     FROM enroll e
              JOIN sections s ON e.e_section = s.id
     WHERE e.s_id = sStudentId
-      AND s.se_year = nYear
-      AND s.se_semester = nSemester
       AND s.c_id_no = vCourseIdNo;
 
     IF nCnt > 0 THEN
@@ -108,7 +106,6 @@ BEGIN
     VALUES (sStudentId, nYear, nSemester, vCourseIdNo, vSectionNo, vCourseId);
 
     -- 8. 트랜잭션 커밋
-    COMMIT;
     result := '수강신청 등록이 완료되었습니다.';
 
 
