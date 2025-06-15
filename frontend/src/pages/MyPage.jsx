@@ -102,6 +102,10 @@ function MyPage() {
   };
 
   const totalCredits = courses.reduce((sum, c) => sum + c.score, 0);
+  let avgCredits = 0
+  if (courses.length > 0) {
+    avgCredits = totalCredits / courses.length;
+  }
 
   return (
     <div className="mypage-grid">
@@ -113,7 +117,7 @@ function MyPage() {
         {error && <div className="error-message">{error}</div>}
 
         <div className="info-section">
-          <div className="photo-box">{student.s_name ? student.s_name.charAt(0) : ""}</div>
+          <div className="photo-box">{student.name ? student.name : ""}</div>
 
           <div className="info-wrap">
             <table className="info-table">
@@ -224,7 +228,7 @@ function MyPage() {
           </table>
 
           <div className="summary">
-            총 신청 과목수: {courses.length || "-"} / 총 신청 학점: {courses.length ? totalCredits : "-"}학점
+            총 신청 과목수: {courses.length || "-"} / 평균 학점: {courses.length ? avgCredits : "0"}학점
           </div>
         </div>
 
