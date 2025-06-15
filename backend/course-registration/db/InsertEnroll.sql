@@ -1,25 +1,22 @@
 CREATE OR REPLACE PROCEDURE InsertEnroll (
     sStudentId IN VARCHAR2,   -- [IN] 수강신청 학생학번
-    nSectionId IN NUMBER,     --[IN] 신청할 섹션 ID (sections 테이블의 PK)
+    nSectionId IN NUMBER,     -- [IN] 신청할 섹션 ID (sections 테이블의 PK)
     result OUT VARCHAR2       -- [OUT] 결과 메시지 반환
 )
-    IS
+IS
+    -- 사용자 정의 예외 선언
     too_many_sumCourseUnit  EXCEPTION;  -- 최대학점초과 예외처리
     too_many_courses        EXCEPTION;  -- 중복 과목 예외처리
     too_many_students       EXCEPTION;  -- 수강신청 인원 초과 예외처리
     duplicate_time          EXCEPTION;  -- 신청한 과목들 시간 중복 여부 예외처리
 
-    nYear           NUMBER; -- 현재 연도추출
-    nSemester       NUMBER; -- 현재 학기추출
-    nSumCourseUnit  NUMBER; -- 현재까지 수강한 총 학점(학점초과확인용)
-    nCourseUnit     NUMBER; -- 신청할 과목 학점(courses 테이블)
-    nCnt            NUMBER; -- 카운트임시변수(동일과목 신청여부 체크용)
-    nTeachMax       NUMBER; -- 해당 섹션의 수강신청 최대인원(인원초과 확인용)
-
-    vCourseId       VARCHAR2(100); --과목이름(sections테이블 참조)
-    vCourseIdNo     VARCHAR2(20); -- 과목번호(sections테이블 참조)
-    vNewTime        VARCHAR2(100); --수업시간(sections테이블 참조)
-    vSectionNo NUMBER; -- 분반 번호 저장용
+    -- %ROWTYPE / %TYPE 적용된 변수 선언
+    vSectionRow     sections%ROWTYPE;          -- 섹션 레코드 전체 조회용
+    nCourseUnit     courses.c_unit%TYPE;       -- 과목 학점
+    nSumCourseUnit  NUMBER;                    -- 현재까지 수강한 총 학점
+    nCnt            NUMBER;                    -- 카운트 임시변수
+    nYear           NUMBER;                    -- 현재 연도 추출
+    nSemester       NUMBER;                    -- 현재 학기 추출
 BEGIN
     result := ''; -- 결과 초기화
 
@@ -31,20 +28,23 @@ BEGIN
     nYear := Date2EnrollYear(SYSDATE);
     nSemester := Date2EnrollSemester(SYSDATE);
 
-    -- 2. section_id로(기본키) 과목 정보 및 시간, 정원 조회
-    SELECT se.c_id, se.c_id_no, se.se_time, se.se_capacity, c.c_unit, se.se_section
-    INTO vCourseId, vCourseIdNo, vNewTime, nTeachMax, nCourseUnit, vSectionNo
-    FROM sections se
-             JOIN courses c ON se.c_id_no = c.c_id_no
-    WHERE se.id = nSectionId;
+    -- 2. section_id로 섹션 레코드 통째로 조회
+    SELECT * INTO vSectionRow
+    FROM sections
+    WHERE id = nSectionId;
+
+    -- 2-1. 과목 학점 조회 (courses 테이블 참조)
+    SELECT c_unit INTO nCourseUnit
+    FROM courses
+    WHERE c_id_no = vSectionRow.c_id_no;
 
     /* 에러 처리 1 : 최대학점 초과여부 */
     -- 3. 이미 수강 중인 학기의 학점 합산 조회
     SELECT NVL(SUM(c.c_unit), 0)
     INTO nSumCourseUnit
     FROM enroll e
-             JOIN sections s ON e.e_section = s.id
-             JOIN courses c ON s.c_id_no = c.c_id_no
+         JOIN sections s ON e.e_section = s.id
+         JOIN courses c ON s.c_id_no = c.c_id_no
     WHERE e.s_id = sStudentId
       AND s.se_year = nYear
       AND s.se_semester = nSemester;
@@ -58,9 +58,11 @@ BEGIN
     SELECT COUNT(*)
     INTO nCnt
     FROM enroll e
-             JOIN sections s ON e.e_section = s.id
+         JOIN sections s ON e.e_section = s.id
     WHERE e.s_id = sStudentId
-      AND s.c_id_no = vCourseIdNo;
+      AND s.se_year = nYear
+      AND s.se_semester = nSemester
+      AND s.c_id_no = vSectionRow.c_id_no;
 
     IF nCnt > 0 THEN
         RAISE too_many_courses;
@@ -73,41 +75,47 @@ BEGIN
     WHERE e_section = nSectionId;
 
     -- 5-1. 수강 정원 초과 여부 확인
-    IF nCnt >= nTeachMax THEN
+    IF nCnt >= vSectionRow.se_capacity THEN
         RAISE too_many_students;
     END IF;
 
-    -- 6. 시간 중복 확인 (같은 요일+교시에 다른 과목 수강 중인지)
+    -- 6. 시간 중복 확인
     SELECT COUNT(*)
     INTO nCnt
     FROM enroll e
-             JOIN sections s ON e.e_section = s.id
+         JOIN sections s ON e.e_section = s.id
     WHERE e.s_id = sStudentId
       AND s.se_year = nYear
       AND s.se_semester = nSemester
       AND EXISTS (
-        SELECT 1
-        FROM (
-                 SELECT REGEXP_SUBSTR(vNewTime, '[^,]+', 1, LEVEL) AS one_time
-                 FROM dual
-                 CONNECT BY LEVEL <= REGEXP_COUNT(vNewTime, ',') + 1
-             )
-        WHERE one_time IS NOT NULL
-          AND INSTR(s.se_time, one_time) > 0
-    );
+          SELECT 1
+          FROM (
+              SELECT REGEXP_SUBSTR(vSectionRow.se_time, '[^,]+', 1, LEVEL) AS one_time
+              FROM dual
+              CONNECT BY LEVEL <= REGEXP_COUNT(vSectionRow.se_time, ',') + 1
+          )
+          WHERE one_time IS NOT NULL
+            AND INSTR(s.se_time, one_time) > 0
+      );
 
     IF nCnt > 0 THEN
         RAISE duplicate_time;
     END IF;
 
-
-    -- 7. 모든 조건 통과 시 수강 신청 등록
+    -- 7. 수강 신청 등록
     INSERT INTO enroll(s_id, e_year, e_semester, c_id_no, e_section, c_id)
-    VALUES (sStudentId, nYear, nSemester, vCourseIdNo, vSectionNo, vCourseId);
+    VALUES (
+        sStudentId,
+        nYear,
+        nSemester,
+        vSectionRow.c_id_no,
+        vSectionRow.se_section,
+        vSectionRow.c_id
+    );
 
-    -- 8. 트랜잭션 커밋
+    -- 8. 커밋
+    COMMIT;
     result := '수강신청 등록이 완료되었습니다.';
-
 
 -- 예외 처리 블록
 EXCEPTION
