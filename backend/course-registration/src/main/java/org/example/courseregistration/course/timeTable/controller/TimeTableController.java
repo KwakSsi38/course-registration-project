@@ -1,4 +1,3 @@
-// ✅ 경로: src/main/java/org/example/courseregistration/controller/TimeTableController.java
 package org.example.courseregistration.course.timeTable.controller;
 
 import lombok.RequiredArgsConstructor;

@@ -7,8 +7,8 @@ BEGIN
     vMonth := TO_NUMBER(TO_CHAR(dDate, 'MM'));
     vYear := TO_NUMBER(TO_CHAR(dDate, 'YYYY'));
 
-    IF vMonth IN (11, 12) THEN
-        RETURN vYear + 1;
+    IF vMonth IN (1, 2) THEN
+        RETURN vYear - 1;
     ELSE
         RETURN vYear;
     END IF;

@@ -28,7 +28,7 @@ public class EnrollController {
 
   @PostMapping("/apply")
   public ResponseEntity<String> apply(
-      @RequestBody String sectionNo,
+      @RequestBody Long sectionNo,
       HttpServletRequest request) {
 
     String bearerToken = request.getHeader("Authorization");
