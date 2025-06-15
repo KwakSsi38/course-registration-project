@@ -10,7 +10,7 @@ import java.util.List;
 public interface SectionsRepository extends JpaRepository<Sections, Long> {
 
   @Query("SELECT new org.example.courseregistration.course.getCourses.dto.CourseSectionDto(" +
-      "s.id, c.idNo, c.id, c.unit, c.major, s.section, s.time, s.capacity, s.classroom) " +
+      "s.id, c.idNo, c.name, c.unit, c.major, s.section, s.time, s.capacity, s.classroom) " +
       "FROM Sections s JOIN s.course c " +
       "ORDER BY c.idNo, s.section")
   List<CourseSectionDto> findAllCourseSections();
