@@ -8,12 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DeleteRequestDto {
-  private String studentId;
   private String courseIdNo;
   private String sectionNo;
 
   public String getStudentId() {
-    return studentId;
+    // return studentId;
+    return null;
   }
 
   public String getCourseIdNo() {

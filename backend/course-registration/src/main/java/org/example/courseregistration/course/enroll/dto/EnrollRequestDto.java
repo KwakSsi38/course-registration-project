@@ -1,5 +1,3 @@
-// ✅ 경로: dto/EnrollRequestDto.java
-
 package org.example.courseregistration.course.enroll.dto;
 
 import lombok.Getter;
@@ -9,13 +7,13 @@ import lombok.Setter;
 @Setter
 public class EnrollRequestDto {
   private String studentId;
-  private Long sectionId;
+  private String sectionId;
 
   public String getStudentId() {
     return studentId;
   }
 
-  public Long getSectionId() {
+  public Number getSectionId() {
     return sectionId;
   }
 

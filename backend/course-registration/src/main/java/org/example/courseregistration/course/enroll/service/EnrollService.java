@@ -13,7 +13,7 @@ public class EnrollService {
   private EntityManager entityManager;
 
   // ✅ 수강신청
-  public String apply(String studentId, Long sectionId) {
+  public String apply(String studentId, String sectionId) {
     try {
       StoredProcedureQuery query = entityManager
           .createStoredProcedureQuery("InsertEnroll");
