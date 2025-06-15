@@ -1,5 +1,3 @@
-// ✅ 경로: src/main/java/org/example/courseregistration/dto/CourseSectionDto.java
-
 package org.example.courseregistration.course.getCourses.dto;
 
 import lombok.AllArgsConstructor;
