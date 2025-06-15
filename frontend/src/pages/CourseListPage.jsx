@@ -60,17 +60,29 @@ function CourseListPage() {
     }
   };
 
+  const totalCredits = selectedCourses.reduce((sum, c) => sum + c.credits, 0);
+
   const handleRegister = async (course) => {
-    const {sectionId} = course;
+    const {sectionId, credits} = course;
 
     try {
+      if (totalCredits + credits > 18) {
+        alert("최대 수강 가능 학점을 초과할 수 없습니다.");
+        return;
+      }
       const enrollRes = await axios.post("http://localhost:8080/api/subject/apply", sectionId, {
         headers: {
           "Content-Type": "application/json",
         },
       });
       if (enrollRes.data == "이미 같은 과목을 수강 신청하였습니다") {
-        alert("이미 같은 과목을 수강 신청하였습니다");
+        alert("같은 과목의 수강 신청 내역이 존재합니다.");
+        return;
+      } else if (enrollRes.data == "수강 인원이 초과되었습니다") {
+        alert("수강 인원이 초과되었습니다.");
+        return;
+      } else if (enrollRes.data == "최대학점을 초과하였습니다") {
+        alert("최대학점을 초과하였습니다");
         return;
       }
       alert("수강 신청 완료");
@@ -103,8 +115,6 @@ function CourseListPage() {
       console.error(err);
     }
   };
-
-  const totalCredits = selectedCourses.reduce((sum, c) => sum + c.credits, 0);
 
   return (
     <div className="course-grid">
