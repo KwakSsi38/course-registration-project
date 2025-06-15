@@ -7,13 +7,13 @@ import lombok.Setter;
 @Setter
 public class EnrollRequestDto {
   private String studentId;
-  private String sectionId;
+  private Long sectionId;
 
   public String getStudentId() {
     return studentId;
   }
 
-  public String getSectionId() {
+  public Long getSectionId() {
     return sectionId;
   }
 

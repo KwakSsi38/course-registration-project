@@ -16,7 +16,7 @@ public class EnrollService {
 
   // ✅ 수강신청
   // 이 메서드 자체가 트랜잭션 경계가 됩니다.
-  public String apply(String studentId, String sectionId) {
+  public String apply(String studentId, Long sectionId) {
     try {
       StoredProcedureQuery query = entityManager
           .createStoredProcedureQuery("InsertEnroll");
@@ -26,7 +26,7 @@ public class EnrollService {
       query.registerStoredProcedureParameter("result", String.class, ParameterMode.OUT);
 
       query.setParameter("sStudentId", studentId);
-      query.setParameter("nSectionId", Long.valueOf(sectionId)); // sectionId가 String이므로 Long으로 변환
+      query.setParameter("nSectionId", sectionId); // sectionId가 String이므로 Long으로 변환
 
       query.execute();
       return (String) query.getOutputParameterValue("result");
