@@ -7,8 +7,12 @@ SELECT
     se.se_section AS section,
     c.c_unit AS credit,
     se.se_classroom AS classroom,
-    se.se_year AS se_year,  -- ✅ 추가
-    se.se_semester AS se_semester  -- ✅ 추가
+    se.se_year AS se_year,
+    se.se_semester AS se_semester
 FROM enroll e
-         JOIN sections se ON e.e_section = se.id
+         JOIN sections se
+              ON e.c_id_no = se.c_id_no
+                  AND e.e_section = se.se_section
+                  AND e.e_year = se.se_year
+                  AND e.e_semester = se.se_semester
          JOIN courses c ON se.c_id_no = c.c_id_no;

@@ -10,8 +10,8 @@ CREATE OR REPLACE PROCEDURE DeleteEnroll (
     nCnt       NUMBER;   -- 삭제된 행 수 확인용 변수
 BEGIN
     -- 1. 현재 연도 및 학기 추출
-    nYear := Date2EnrollYear(SYSDATE);
-    nSemester := Date2EnrollSemester(SYSDATE);
+    nYear := Date2EnrollYear(TO_DATE('2024-09-01', 'YYYY-MM-DD')); --날짜 SYSDATE하면 2학기라 지정
+    nSemester := Date2EnrollSemester(TO_DATE('2024-09-09', 'YYYY-MM-DD')); --날짜 SYSDATE하면 2학기라 지정
 
     -- 2. 삭제 실행
     DELETE FROM enroll

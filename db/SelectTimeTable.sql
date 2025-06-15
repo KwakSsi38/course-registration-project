@@ -1,36 +1,35 @@
-/* 패러미터로 입력한 학번, 년도, 학기에 해당하는 수강신청 시간표를 보여준다.
-   시간표 정보로 교시, 과목번호, 과목명, 분반, 학점, 장소를 보여줌
-   총 신청 과목수와 총 학점을 보여줌 */
+--DROP VIEW "V_StudentTimetable";
 
 CREATE OR REPLACE PROCEDURE SelectTimeTable (
-    sStudentId IN VARCHAR2, -- [IN] 학생 학번 입력
-    nYear      IN NUMBER,   -- [IN] 해당 연도 입력
-    nSemester  IN NUMBER    -- [IN] 해당 학기 입력
+    sStudentId IN VARCHAR2,
+    nYear      IN NUMBER,
+    nSemester  IN NUMBER
 )
     IS
-    -- 커서 정의: 뷰에서 조건에 맞는 시간표 조회
     CURSOR timetable_cur IS
-        SELECT time AS 교시,
-               course_id AS 과목번호,
-               course_name AS 과목명,
-               section AS 분반,
-               credit AS 학점,
-               classroom AS 장소
-        FROM V_StudentTimetable v
-                 JOIN sections s ON v.course_id = s.c_id_no AND v.section = s.se_section
-        WHERE v.student_id = sStudentId
-          AND s.se_year = nYear
-          AND s.se_semester = nSemester;
+        SELECT
+            se.se_time AS 교시,
+            c.c_id_no AS 과목번호,
+            c.c_id AS 과목명,
+            se.se_section AS 분반,
+            c.c_unit AS 학점,
+            se.se_classroom AS 장소
+        FROM enroll e
+                 JOIN sections se ON e.c_id_no = se.c_id_no
+            AND e.e_section = se.se_section
+            AND e.e_year = se.se_year
+            AND e.e_semester = se.se_semester
+                 JOIN courses c ON se.c_id_no = c.c_id_no
+        WHERE e.s_id = sStudentId
+          AND se.se_year = nYear
+          AND se.se_semester = nSemester;
 
-    -- 커서에서 가져올 변수들
     vTime        VARCHAR2(100);
     vCourseId    VARCHAR2(20);
     vCourseName  VARCHAR2(100);
     vSection     VARCHAR2(10);
     vCredits     NUMBER;
     vClassroom   VARCHAR2(50);
-
-    -- 합계 계산용
     vTotalSubjects NUMBER := 0;
     vTotalCredits  NUMBER := 0;
 BEGIN
@@ -38,7 +37,6 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('교시 | 과목번호 | 과목명 | 분반 | 학점 | 장소');
     DBMS_OUTPUT.PUT_LINE('---------------------------------------------------------');
 
-    -- 커서 실행
     OPEN timetable_cur;
     LOOP
         FETCH timetable_cur INTO vTime, vCourseId, vCourseName, vSection, vCredits, vClassroom;
@@ -54,7 +52,6 @@ BEGIN
     END LOOP;
     CLOSE timetable_cur;
 
-    -- 합계 출력
     DBMS_OUTPUT.PUT_LINE('---------------------------------------------------------');
     DBMS_OUTPUT.PUT_LINE('총 신청 과목 수: ' || vTotalSubjects);
     DBMS_OUTPUT.PUT_LINE('총 신청 학점 수: ' || vTotalCredits);
