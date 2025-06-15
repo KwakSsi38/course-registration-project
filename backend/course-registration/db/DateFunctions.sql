@@ -23,12 +23,12 @@ CREATE OR REPLACE FUNCTION Date2EnrollSemester(dDate IN DATE)
 BEGIN
     vMonth := TO_NUMBER(TO_CHAR(dDate, 'MM'));
 
-    IF vMonth BETWEEN 1 AND 4 THEN
+    IF vMonth BETWEEN 3 AND 8 THEN
         RETURN 1;
-    ELSIF vMonth BETWEEN 5 AND 10 THEN
+    ELSIF vMonth BETWEEN 9 AND 12 THEN
         RETURN 2;
     ELSE -- 11, 12월
-        RETURN 1;
+        RETURN 2;
     END IF;
 END;
 /
