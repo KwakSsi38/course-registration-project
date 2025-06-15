@@ -52,8 +52,7 @@ public class EnrollController {
 
   @DeleteMapping("/cancel")
   public ResponseEntity<String> cancel(
-      @RequestBody String courseIdNo,
-      @RequestBody String sectionNo,
+      @RequestBody DeleteRequestDto cancleRequest,
       HttpServletRequest request) {
 
     String bearerToken = request.getHeader("Authorization");
@@ -70,6 +69,9 @@ public class EnrollController {
       return ResponseEntity.status(HttpStatus.FORBIDDEN)
           .body("재학생만 수강취소가 가능합니다.");
     }
+
+    String courseIdNo = cancleRequest.getCourseIdNo();
+    String sectionNo = cancleRequest.getSectionNo();
 
     String result = enrollService.cancel(studentId, courseIdNo, sectionNo);
     return ResponseEntity.ok(result);
