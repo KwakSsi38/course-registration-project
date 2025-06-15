@@ -4,41 +4,57 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.StoredProcedureQuery;
+import org.example.courseregistration.course.enroll.dto.EnrollResponseDto; // EnrollResponseDto 임포트
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // 임포트 추가
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional // 클래스 레벨에 @Transactional 추가
+@Transactional
 public class EnrollService {
 
   @PersistenceContext
   private EntityManager entityManager;
 
-  // ✅ 수강신청
-  // 이 메서드 자체가 트랜잭션 경계가 됩니다.
-  public String apply(String studentId, Long sectionId) {
-    try {
-      StoredProcedureQuery query = entityManager
-          .createStoredProcedureQuery("InsertEnroll");
+  /**
+   * 수강 신청 프로시저 호출 및 결과 반환
+   * 
+   * @param studentId 학생 학번
+   * @param sectionId 섹션 ID
+   * @return 수강 신청 결과 메시지와 남은 여석을 포함하는 DTO
+   */
+  public EnrollResponseDto apply(String studentId, Long sectionId) {
+    // PL/SQL 프로시저가 자체적으로 예외를 처리하고 'result' OUT 파라미터로 메시지를 반환하므로,
+    // 여기서는 광범위한 try-catch 블록으로 프로시저 메시지를 덮어쓰지 않습니다.
+    // JDBC/JPA 호출 자체에서 발생하는 시스템 오류는 Spring의 @Transactional이 처리합니다.
+    StoredProcedureQuery query = entityManager
+        .createStoredProcedureQuery("InsertEnroll");
 
-      query.registerStoredProcedureParameter("sStudentId", String.class, ParameterMode.IN);
-      query.registerStoredProcedureParameter("nSectionId", Long.class, ParameterMode.IN);
-      query.registerStoredProcedureParameter("result", String.class, ParameterMode.OUT);
+    // IN 파라미터 등록
+    query.registerStoredProcedureParameter("sStudentId", String.class, ParameterMode.IN);
+    query.registerStoredProcedureParameter("nSectionId", Long.class, ParameterMode.IN);
 
-      query.setParameter("sStudentId", studentId);
-      query.setParameter("nSectionId", sectionId); // sectionId가 String이므로 Long으로 변환
+    // OUT 파라미터 등록
+    query.registerStoredProcedureParameter("result", String.class, ParameterMode.OUT);
+    query.registerStoredProcedureParameter("nLeftSeats", Integer.class, ParameterMode.OUT); // Integer로 등록
 
-      query.execute();
-      return (String) query.getOutputParameterValue("result");
+    // IN 파라미터 값 설정
+    query.setParameter("sStudentId", studentId);
+    query.setParameter("nSectionId", sectionId);
 
-    } catch (Exception e) {
-      throw new RuntimeException("프로시저 실행 중 오류 발생: " + e.getMessage(), e);
-      // return "프로시저 실행 중 오류 발생: " + e.getMessage(); // 이 줄 대신 throw 사용
-    }
+    // 프로시저 실행
+    query.execute();
+
+    // OUT 파라미터 값 가져오기
+    String message = (String) query.getOutputParameterValue("result");
+    Integer remainingSeats = (Integer) query.getOutputParameterValue("nLeftSeats");
+
+    // DTO 객체로 반환
+    return new EnrollResponseDto(message, remainingSeats);
   }
 
-  // ✅ 수강 취소 (DeleteEnroll 프로시저)
-  // 이 메서드 자체가 트랜잭션 경계가 됩니다.
+  /**
+   * 수강 취소 프로시저 호출 (기존 로직 유지)
+   */
   public String cancel(String studentId, String courseIdNo, String sectionNo) {
     try {
       StoredProcedureQuery query = entityManager
@@ -46,21 +62,20 @@ public class EnrollService {
 
       query.registerStoredProcedureParameter("sStudentId", String.class, ParameterMode.IN);
       query.registerStoredProcedureParameter("vCourseIdNo", String.class, ParameterMode.IN);
-      query.registerStoredProcedureParameter("vSectionNo", String.class, ParameterMode.IN); // String으로 유지
+      query.registerStoredProcedureParameter("vSectionNo", String.class, ParameterMode.IN);
       query.registerStoredProcedureParameter("result", String.class, ParameterMode.OUT);
 
       query.setParameter("sStudentId", studentId);
       query.setParameter("vCourseIdNo", courseIdNo);
-      query.setParameter("vSectionNo", sectionNo); // String으로 이미 받으므로 그대로 사용
+      query.setParameter("vSectionNo", sectionNo);
 
       query.execute();
       return (String) query.getOutputParameterValue("result");
 
     } catch (Exception e) {
-      // 트랜잭션이 롤백될 수 있도록 RuntimeException을 던지는 것이 좋습니다.
-      // 현재는 String 반환이므로, 호출하는 쪽에서 이 오류를 처리해야 합니다.
+      // 이 catch 블록은 DeleteEnroll 프로시저가 Oracle 오류를 발생시키거나
+      // JDBC/JPA 호출 자체에 문제가 있을 때만 발동합니다.
       throw new RuntimeException("삭제 프로시저 실행 중 오류 발생: " + e.getMessage(), e);
-      // return "삭제 프로시저 실행 중 오류 발생: " + e.getMessage(); // 이 줄 대신 throw 사용
     }
   }
 }

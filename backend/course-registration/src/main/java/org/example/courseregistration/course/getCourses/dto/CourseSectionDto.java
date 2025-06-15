@@ -19,4 +19,5 @@ public class CourseSectionDto {
   private int capacity; // 수강 정원 (se_capacity)
   private String classroom; // 강의실 위치 (se_classroom)
   private String professorName;
+  private Long remainingCapacity;
 }
