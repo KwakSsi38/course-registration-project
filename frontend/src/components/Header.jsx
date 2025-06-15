@@ -13,6 +13,8 @@ function Header() {
   const handleLogout = () => {
     localStorage.removeItem("token"); // 토큰 삭제
     delete axios.defaults.headers.common["Authorization"]; // axios 헤더 제거
+    alert("로그아웃 되었습니다."); 
+    
     navigate("/"); // 로그인 페이지로 이동
   };
 
