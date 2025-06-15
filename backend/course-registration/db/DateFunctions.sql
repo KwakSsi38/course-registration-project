@@ -1,10 +1,17 @@
 CREATE OR REPLACE FUNCTION Date2EnrollYear(dDate IN DATE)
     RETURN NUMBER
     IS
+    vMonth NUMBER;
     vYear  NUMBER;
 BEGIN
+    vMonth := TO_NUMBER(TO_CHAR(dDate, 'MM'));
     vYear := TO_NUMBER(TO_CHAR(dDate, 'YYYY'));
-    RETURN vYear;
+
+    IF vMonth IN (1, 2) THEN
+        RETURN vYear - 1;
+    ELSE
+        RETURN vYear;
+    END IF;
 END;
 /
 
