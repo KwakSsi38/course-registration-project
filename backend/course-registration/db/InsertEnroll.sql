@@ -128,7 +128,7 @@ BEGIN
     COMMIT;
 
     -- ✅ 여석 포함 결과 메시지
-    result := '완료. 여석' || nLeftSeats';
+    result := '완료. 여석' || nLeftSeats;
 
 -- 예외 처리
 EXCEPTION
@@ -145,4 +145,5 @@ EXCEPTION
         result := '오류 발생: ' || SQLERRM;
 END;
 /
+
 
