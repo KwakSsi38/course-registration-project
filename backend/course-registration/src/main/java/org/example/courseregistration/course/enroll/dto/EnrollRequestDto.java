@@ -13,7 +13,7 @@ public class EnrollRequestDto {
     return studentId;
   }
 
-  public Number getSectionId() {
+  public String getSectionId() {
     return sectionId;
   }
 
