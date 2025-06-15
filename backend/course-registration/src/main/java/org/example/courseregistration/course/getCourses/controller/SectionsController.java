@@ -1,5 +1,3 @@
-// ✅ 경로: src/main/java/org/example/courseregistration/controller/SectionsController.java
-
 package org.example.courseregistration.course.getCourses.controller;
 
 import lombok.RequiredArgsConstructor;
