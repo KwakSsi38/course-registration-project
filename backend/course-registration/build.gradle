@@ -21,6 +21,9 @@ configurations {
 
 repositories {
     mavenCentral()
+    flatDir{
+      dirs 'libs'
+    }
 }
 
 dependencies {
@@ -28,7 +31,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+    // runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+    implementation files('libs/ojdbc11.jar')
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
