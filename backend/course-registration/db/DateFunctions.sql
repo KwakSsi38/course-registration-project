@@ -27,7 +27,7 @@ BEGIN
         RETURN 1;
     ELSIF vMonth BETWEEN 9 AND 12 THEN
         RETURN 2;
-    ELSE -- 11, 12월
+    ELSE -- 1, 2
         RETURN 2;
     END IF;
 END;
