@@ -1,0 +1,7 @@
+-- e_year
+ALTER TABLE enroll
+ADD CONSTRAINT chk_e_year CHECK (e_year BETWEEN 2000 AND 2100);
+
+-- e_semester
+ALTER TABLE enroll
+ADD CONSTRAINT chk_e_semester CHECK (e_semester IN (1, 2));

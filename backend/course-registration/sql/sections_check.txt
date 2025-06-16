@@ -1,0 +1,11 @@
+-- se_year
+ALTER TABLE sections
+ADD CONSTRAINT chk_se_year CHECK (se_year BETWEEN 2000 AND 2100);
+
+-- se_semester
+ALTER TABLE sections
+ADD CONSTRAINT chk_se_semester CHECK (se_semester IN (1, 2));
+
+-- se_capacity
+ALTER TABLE sections
+ADD CONSTRAINT chk_se_capacity CHECK (se_capacity > 0);
