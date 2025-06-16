@@ -19,7 +19,7 @@ public class SectionsService {
   }
 
   public List<CourseSectionDto> searchCourseSections(CourseSearchCondition condition) {
-    // ✅ 검색어에 와일드카드 문자 '%'를 직접 추가합니다.
+    // 검색어에 와일드카드 문자 '%'를 직접 추가
     String courseName = condition.getCourseName();
     if (courseName != null && !courseName.isEmpty()) {
       courseName = "%" + courseName + "%";
@@ -40,7 +40,7 @@ public class SectionsService {
       professorName = "%" + professorName + "%";
     }
 
-    // credit은 LIKE 검색이 아니므로 와일드카드를 붙이지 않습니다.
+    // credit은 LIKE 검색이 아니므로 와일드카드를 붙이지 않음
     Integer credit = condition.getCredit();
 
     return sectionsRepository.findCourseSectionsByCondition(

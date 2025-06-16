@@ -23,9 +23,6 @@ public class EnrollService {
    * @return 수강 신청 결과 메시지와 남은 여석을 포함하는 DTO
    */
   public EnrollResponseDto apply(String studentId, Long sectionId) {
-    // PL/SQL 프로시저가 자체적으로 예외를 처리하고 'result' OUT 파라미터로 메시지를 반환하므로,
-    // 여기서는 광범위한 try-catch 블록으로 프로시저 메시지를 덮어쓰지 않습니다.
-    // JDBC/JPA 호출 자체에서 발생하는 시스템 오류는 Spring의 @Transactional이 처리합니다.
     StoredProcedureQuery query = entityManager
         .createStoredProcedureQuery("InsertEnroll");
 
@@ -53,7 +50,7 @@ public class EnrollService {
   }
 
   /**
-   * 수강 취소 프로시저 호출 (기존 로직 유지)
+   * 수강 취소 프로시저 호출
    */
   public String cancel(String studentId, String courseIdNo, String sectionNo) {
     try {
@@ -74,7 +71,7 @@ public class EnrollService {
 
     } catch (Exception e) {
       // 이 catch 블록은 DeleteEnroll 프로시저가 Oracle 오류를 발생시키거나
-      // JDBC/JPA 호출 자체에 문제가 있을 때만 발동합니다.
+      // JDBC/JPA 호출 자체에 문제가 있을 때만 발동
       throw new RuntimeException("삭제 프로시저 실행 중 오류 발생: " + e.getMessage(), e);
     }
   }

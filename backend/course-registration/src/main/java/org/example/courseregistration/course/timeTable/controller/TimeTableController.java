@@ -20,7 +20,7 @@ public class TimeTableController {
   private final CourseTimeTableService timeTableService;
   private final JwtTokenProvider jwtTokenProvider;
 
-  // ✅ 시간표 조회 API
+  // 시간표 조회 API
   @GetMapping("/view")
   public ResponseEntity<List<TimeTableDto>> getTimeTable(HttpServletRequest request) {
 

@@ -25,7 +25,7 @@ public class SectionsController {
       @RequestParam(required = false) String courseIdNo,
       @RequestParam(required = false) String major,
       @RequestParam(required = false) String professorName,
-      @RequestParam(required = false) Integer credit) { // 학점 Integer로
+      @RequestParam(required = false) Integer credit) {
 
     // 검색 조건 DTO를 생성하여 Service로 전달
     CourseSearchCondition condition = new CourseSearchCondition(

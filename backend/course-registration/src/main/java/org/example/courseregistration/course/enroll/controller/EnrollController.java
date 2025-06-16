@@ -55,9 +55,7 @@ public class EnrollController {
     return ResponseEntity.ok(responseDto);
   }
 
-  /**
-   * 수강 취소 API (기존 로직 유지)
-   */
+  // 수강 취소 API
   @DeleteMapping("/cancel")
   public ResponseEntity<String> cancel(
       @RequestBody DeleteRequestDto cancleRequest,

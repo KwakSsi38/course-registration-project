@@ -21,7 +21,7 @@ public class CourseTimeTableService {
   public List<TimeTableDto> getTimeTable(String studentId) {
     List<TimeTableDto> timeTable = new ArrayList<>();
 
-    // 프로시저 호출 시 입력 파라미터 (?)와 출력 파라미터 (?) 두 개를 명시합니다.
+    // 프로시저 호출 시 입력 파라미터 (?)와 출력 파라미터 (?) 두 개를 명시
     String sql = "{CALL SelectTimeTable(?, ?)}";
 
     try (Connection conn = dataSource.getConnection();
@@ -37,7 +37,7 @@ public class CourseTimeTableService {
       // 프로시저 실행
       stmt.execute();
 
-      // OUT 파라미터로 반환된 커서에서 ResultSet을 가져옵니다.
+      // OUT 파라미터로 반환된 커서에서 ResultSet을 가져오기
       try (ResultSet rs = (ResultSet) stmt.getObject(2)) {
         // ResultSet에서 데이터를 읽어 TimeTableDto 리스트에 추가
         while (rs.next()) {
@@ -53,7 +53,7 @@ public class CourseTimeTableService {
         }
       }
     } catch (SQLException e) {
-      // 오류 발생 시 스택 트레이스를 출력하고 RuntimeException을 발생시킵니다.
+      // 오류 발생 시 스택 트레이스를 출력하고 RuntimeException을 발생
       e.printStackTrace();
       throw new RuntimeException("시간표 조회 중 오류 발생: " + e.getMessage());
     }
